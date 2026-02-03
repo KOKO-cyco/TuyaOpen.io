@@ -62,6 +62,19 @@ module.exports = {
             },
           ],
         },
+        {
+          type: 'category',
+          label: 'Linux',
+          collapsed: false,
+          items: [
+            {
+              type: 'category',
+              label: 'Raspberry Pi',
+              collapsed: false,
+              items: ['hardware-specific/Linux/raspberry-pi/overview-raspberry-pi'],
+            },
+          ],
+        },
       ],
     },
     // ------------------------------------------------------------------
