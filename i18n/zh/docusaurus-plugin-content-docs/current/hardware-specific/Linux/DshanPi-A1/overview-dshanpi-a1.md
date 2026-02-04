@@ -1,0 +1,146 @@
+---
+title: "DshanPi-A1 概述"
+---
+
+本文档将指导你在 [DshanPi-A1](https://rockchip.100ask.net/en/docs/DshanPi-A1/intro/) 开发板上运行 TuyaOpen 的 [your_chat_bot](https://tuyaopen.ai/zh/docs/applications/tuya.ai/demo-your-chat-bot) 聊天机器人项目。
+
+## 编译方式说明
+
+DshanPi-A1 支持两种编译方式：
+- **交叉编译**：在 PC 上编译，然后传输到开发板运行
+- **本地编译**：直接在开发板上编译
+
+系统会自动检测当前平台并选择合适的编译方式。
+
+> **注意**：macOS 系统不支持交叉编译，请使用 Linux 或在开发板上直接编译。
+
+## 快速上手指南
+
+与 T5 平台相比，在 DshanPi-A1 上运行需要完成以下两个额外配置：
+
+1. 配置板载声卡（让开发板能够录音和播放声音）
+2. 配置语音唤醒模型路径
+
+## 第一步：配置板载声卡
+
+DshanPi-A1 开发板自带麦克风和扬声器，但需要进行配置才能正常使用。
+
+### 1.1 安装音频支持库
+
+首先安装 ALSA 音频库（用于处理音频输入输出）：
+
+```bash
+sudo apt-get install libasound2-dev
+```
+
+### 1.2 配置扬声器输出
+
+DshanPi-A1 有两个音频输出设备：耳机接口和板载喇叭。为了使用更方便，我们配置板载喇叭作为默认输出设备。
+
+编辑音频配置文件：
+
+```bash
+sudo vi /etc/asound.conf
+```
+
+将以下内容添加到文件中：
+
+```plaintext
+pcm.speaker_r {
+  type route
+  slave.pcm "hw:0,0"
+  slave.channels 2
+  ttable.0.1 1
+  ttable.1.1 0
+  ttable.0.0 0
+  ttable.1.0 0
+}
+```
+
+保存并退出编辑器（按 `ESC`，输入 `:wq`，按 `Enter`）。
+
+## 第二步：配置语音唤醒模型
+
+语音唤醒功能需要使用 KWS（关键词唤醒）模型，让设备能够识别"你好涂鸦"。
+
+### 2.1 获取模型文件
+
+有两种方式获取唤醒模型：
+
+**方式一：自动下载（推荐）**
+- 选择 DshanPi-A1 平台编译时，模型会自动下载到项目目录：
+  ```
+  platform/LINUX/tuyaos_adapter/src/tkl_audio/models
+  ```
+
+**方式二：手动下载**
+- 从 [TuyaOpen-ubuntu 仓库](https://github.com/tuya/TuyaOpen-ubuntu/tree/platform_ubuntu/tuyaos_adapter/src/tkl_audio/models) 下载以下两个文件：
+  - `mdtc_chunk_300ms.mnn` - 唤醒模型文件
+  - `tokens.txt` - 模型词表文件
+
+### 2.2 上传模型到开发板
+
+将模型文件上传到开发板的某个目录，例如 `/home/pi/Desktop/models/`。
+
+### 2.3 配置模型路径
+
+在项目中配置模型文件的路径：
+
+1. 进入项目目录：
+   ```bash
+   cd apps/tuya.ai/your_chat_bot
+   ```
+
+2. 选择 DshanPi-A1 配置：
+   ```bash
+   tos.py config choice
+   ```
+   在弹出的菜单中选择 `DshanPi_A1.config`
+
+3. 打开配置菜单：
+   ```bash
+   tos.py config menu
+   ```
+
+4. 按以下路径进入配置项：
+   ```
+   (Top) → Choice a board → LINUX → TKL Board Configuration
+   ```
+
+5. 修改以下两个配置项为模型文件的实际路径：
+   - `KWS model file path` → 填入 `mdtc_chunk_300ms.mnn` 的完整路径
+   - `KWS model token file path` → 填入 `tokens.txt` 的完整路径
+
+### 2.4 配置示例
+
+假设你将模型文件放在 `/home/pi/Desktop/models/` 目录下，配置应该如下图所示：
+
+![models_path_config](https://images.tuyacn.com/fe-static/docs/img/eba887ff-d37f-4161-8f08-b641863ab9a6.png)
+
+> **重要提示**：路径必须填写正确，否则语音唤醒功能无法正常工作。建议使用绝对路径（以 `/` 开头的完整路径）。
+
+## 补充说明
+
+### 使用交叉编译时的文件传输
+
+如果你在 PC 上进行交叉编译，需要将编译好的可执行文件传输到开发板。可以使用 `scp` 命令：
+
+```bash
+scp ./dist/your_chat_bot_1.0.1/your_chat_bot_QIO_1.0.1.bin username@192.168.1.xxx:/home/pi/Desktop/
+```
+
+**命令说明：**
+- `username` - 开发板的用户名
+- `192.168.1.xxx` - 开发板的 IP 地址
+- `/home/xxx/Desktop/` - 开发板上的目标目录
+
+## 常见问题
+
+**Q: 音频设备配置后没有声音怎么办？**  
+A: 可以使用 `aplay -l` 命令查看可用的音频设备，确认设备编号是否正确。
+
+**Q: 语音唤醒不工作怎么办？**  
+A: 请检查模型文件路径是否正确，文件是否完整。可以使用 `ls -lh` 命令查看文件是否存在及大小是否正常。
+
+**Q: 如何查看开发板的 IP 地址？**  
+A: 在开发板上执行 `ip addr` 或 `ifconfig` 命令即可查看。

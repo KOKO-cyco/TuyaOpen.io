@@ -69,6 +69,12 @@ module.exports = {
           items: [
             {
               type: 'category',
+              label: 'DshanPi A1',
+              collapsed: false,
+              items: ['hardware-specific/Linux/DshanPi-A1/overview-dshanpi-a1'],
+            },
+            {
+              type: 'category',
               label: 'Raspberry Pi',
               collapsed: false,
               items: ['hardware-specific/Linux/raspberry-pi/overview-raspberry-pi'],
