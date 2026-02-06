@@ -67,20 +67,20 @@ pcm.speaker_r {
 
 有两种方式获取唤醒模型：
 
-**方式一：自动下载（推荐）**
+**方式一：自动下载**
 - 选择 DshanPi-A1 平台编译时，模型会自动下载到项目目录：
   ```
   platform/LINUX/tuyaos_adapter/src/tkl_audio/models
   ```
 
 **方式二：手动下载**
-- 从 [TuyaOpen-ubuntu 仓库](https://github.com/tuya/TuyaOpen-ubuntu/tree/platform_ubuntu/tuyaos_adapter/src/tkl_audio/models) 下载以下两个文件：
-  - `mdtc_chunk_300ms.mnn` - 唤醒模型文件
-  - `tokens.txt` - 模型词表文件
 
-### 2.2 上传模型到开发板
+使用下面的命令下载 `mdtc_chunk_300ms.mnn` 和 `tokens.txt` 文件到 `~/tuyaopen_models` 目录下：
 
-将模型文件上传到开发板的某个目录，例如 `/home/pi/Desktop/models/`。
+```bash
+wget -P ~/tuyaopen_models https://github.com/tuya/TuyaOpen-ubuntu/raw/platform_ubuntu/tuyaos_adapter/src/tkl_audio/models/mdtc_chunk_300ms.mnn
+wget -P ~/tuyaopen_models https://github.com/tuya/TuyaOpen-ubuntu/raw/platform_ubuntu/tuyaos_adapter/src/tkl_audio/models/tokens.txt
+```
 
 ### 2.3 配置模型路径
 
@@ -113,11 +113,11 @@ pcm.speaker_r {
 
 ### 2.4 配置示例
 
-假设你将模型文件放在 `/home/pi/Desktop/models/` 目录下，配置应该如下图所示：
+假设你将模型文件放在 `~/tuyaopen_models` 目录下，配置应该如下图所示：
 
-![models_path_config](https://images.tuyacn.com/fe-static/docs/img/eba887ff-d37f-4161-8f08-b641863ab9a6.png)
+![models_path_config](https://images.tuyacn.com/fe-static/docs/img/4e3897a7-6d32-40e2-b2bd-6d2a6497076e.png)
 
-> **重要提示**：路径必须填写正确，否则语音唤醒功能无法正常工作。建议使用绝对路径（以 `/` 开头的完整路径）。
+> **重要提示**：路径必须填写正确，否则语音唤醒功能无法正常工作。
 
 ## 补充说明
 
@@ -126,21 +126,16 @@ pcm.speaker_r {
 如果你在 PC 上进行交叉编译，需要将编译好的可执行文件传输到开发板。可以使用 `scp` 命令：
 
 ```bash
-scp ./dist/your_chat_bot_1.0.1/your_chat_bot_QIO_1.0.1.bin username@192.168.1.xxx:/home/pi/Desktop/
+scp ./dist/your_chat_bot_1.0.1/your_chat_bot_QIO_1.0.1.bin username@192.168.1.xxx:/home/xx/Desktop/
 ```
 
 **命令说明：**
 - `username` - 开发板的用户名
 - `192.168.1.xxx` - 开发板的 IP 地址
-- `/home/xxx/Desktop/` - 开发板上的目标目录
+- `/home/xx/Desktop/` - 开发板上的目标目录
 
 ## 常见问题
-
-**Q: 音频设备配置后没有声音怎么办？**  
-A: 可以使用 `aplay -l` 命令查看可用的音频设备，确认设备编号是否正确。
 
 **Q: 语音唤醒不工作怎么办？**  
 A: 请检查模型文件路径是否正确，文件是否完整。可以使用 `ls -lh` 命令查看文件是否存在及大小是否正常。
 
-**Q: 如何查看开发板的 IP 地址？**  
-A: 在开发板上执行 `ip addr` 或 `ifconfig` 命令即可查看。

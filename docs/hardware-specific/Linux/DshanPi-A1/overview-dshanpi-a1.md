@@ -2,32 +2,33 @@
 title: "DshanPi-A1 Overview"
 ---
 
-This guide will walk you through running TuyaOpen's [your_chat_bot](https://tuyaopen.ai/docs/applications/tuya.ai/demo-your-chat-bot) chatbot project on the [DshanPi-A1](https://rockchip.100ask.net/en/docs/DshanPi-A1/intro/) development board.
+This document guides you through running the TuyaOpen [your_chat_bot](https://tuyaopen.ai/zh/docs/applications/tuya.ai/demo-your-chat-bot) chatbot project on the [DshanPi-A1](https://rockchip.100ask.net/en/docs/DshanPi-A1/intro/) development board.
 
-## Compilation Methods
+## Build Methods
 
-DshanPi-A1 supports two compilation approaches:
-- **Cross-compilation**: Compile on your PC, then transfer the executable to the development board
-- **Native compilation**: Compile directly on the development board
+DshanPi-A1 supports two build methods:
 
-The system will automatically detect your platform and select the appropriate compilation method.
+- **Cross-compilation**: Build on a PC, then transfer and run on the board
+- **Native build**: Build directly on the board
 
-> **Note**: Cross-compilation is not supported on macOS. Please use Linux or compile directly on the development board.
+The system automatically detects the current platform and selects the appropriate build method.
 
-## Quick Start Guide
+> **Note**: Cross-compilation is not supported on macOS. Use Linux or build directly on the board.
 
-Compared to the T5 platform, running on DshanPi-A1 requires two additional configurations:
+## Quick Start
 
-1. Configure the onboard audio (to enable recording and audio playback)
+Compared with the T5 platform, running on DshanPi-A1 requires two additional configuration steps:
+
+1. Configure the onboard sound card (so the board can record and play audio)
 2. Configure the voice wake-up model path
 
-## Configure the Onboard Audio
+## Step 1: Configure the Onboard Sound Card
 
-The DshanPi-A1 development board comes with a built-in microphone and speaker, but they require configuration before use.
+The DshanPi-A1 board has a built-in microphone and speaker, but they must be configured before use.
 
-### 1.1 Install Audio Support Library
+### 1.1 Install Audio Libraries
 
-First, install the ALSA audio library (used for audio input and output processing):
+Install the ALSA library (for audio input and output):
 
 ```bash
 sudo apt-get install libasound2-dev
@@ -35,7 +36,7 @@ sudo apt-get install libasound2-dev
 
 ### 1.2 Configure Speaker Output
 
-DshanPi-A1 has two audio output devices: a headphone jack and an onboard speaker. For convenience, we'll configure the onboard speaker as the default output device.
+The DshanPi-A1 has two audio output devices: a headphone jack and an onboard speaker. For convenience, we configure the onboard speaker as the default output device.
 
 Edit the audio configuration file:
 
@@ -57,32 +58,37 @@ pcm.speaker_r {
 }
 ```
 
-Save and exit the editor (press `ESC`, type `:wq`, and press `Enter`).
+Save and exit the editor (press `ESC`, type `:wq`, then press `Enter`).
+
+## Step 2: Configure the Voice Wake-up Model
+
+Voice wake-up uses a KWS (keyword spotting) model so the device can recognize "你好涂鸦" (Hello Tuya).
 
 ### 2.1 Obtain Model Files
 
-There are two ways to obtain the wake-up model:
+You can obtain the wake-up model in two ways:
 
-**Method 1: Automatic Download (Recommended)**
-- When you select the DshanPi-A1 platform for compilation, the model will be automatically downloaded to the project directory:
+**Option 1: Automatic download**
+
+- When you select the DshanPi-A1 platform for build, the model is downloaded automatically into the project directory:
   ```
   platform/LINUX/tuyaos_adapter/src/tkl_audio/models
   ```
 
-**Method 2: Manual Download**
-- Download the following two files from the [TuyaOpen-ubuntu repository](https://github.com/tuya/TuyaOpen-ubuntu/tree/platform_ubuntu/tuyaos_adapter/src/tkl_audio/models):
-  - `mdtc_chunk_300ms.mnn` - Wake-up model file
-  - `tokens.txt` - Model token file
+**Option 2: Manual download**
 
-### 2.2 Upload Model to Development Board
+Download `mdtc_chunk_300ms.mnn` and `tokens.txt` to your `~/tuyaopen_models` directory with:
 
-Upload the model files to a directory on the development board, for example `/home/pi/Desktop/models/`.
+```bash
+wget -P ~/tuyaopen_models https://github.com/tuya/TuyaOpen-ubuntu/raw/platform_ubuntu/tuyaos_adapter/src/tkl_audio/models/mdtc_chunk_300ms.mnn
+wget -P ~/tuyaopen_models https://github.com/tuya/TuyaOpen-ubuntu/raw/platform_ubuntu/tuyaos_adapter/src/tkl_audio/models/tokens.txt
+```
 
-### 2.3 Configure Model Path
+### 2.3 Configure Model Paths
 
-Configure the model file paths in your project:
+Configure the paths to the model files in the project:
 
-1. Navigate to the project directory:
+1. Go to the project directory:
    ```bash
    cd apps/tuya.ai/your_chat_bot
    ```
@@ -91,52 +97,47 @@ Configure the model file paths in your project:
    ```bash
    tos.py config choice
    ```
-   Select `DshanPi_A1.config` from the menu
+   Choose `DshanPi_A1.config` from the menu.
 
 3. Open the configuration menu:
    ```bash
    tos.py config menu
    ```
 
-4. Navigate to the configuration items following this path:
+4. Navigate to the following path in the menu:
    ```
    (Top) → Choice a board → LINUX → TKL Board Configuration
    ```
 
-5. Update the following two configuration items with the actual paths to your model files:
+5. Set these two options to the actual paths of the model files:
    - `KWS model file path` → Enter the full path to `mdtc_chunk_300ms.mnn`
    - `KWS model token file path` → Enter the full path to `tokens.txt`
 
 ### 2.4 Configuration Example
 
-If you placed the model files in the `/home/pi/Desktop/models/` directory, the configuration should look like this:
+If the model files are in `~/tuyaopen_models`, the configuration should look like the following:
 
-![models_path_config](https://images.tuyacn.com/fe-static/docs/img/eba887ff-d37f-4161-8f08-b641863ab9a6.png)
+![models_path_config](https://images.tuyacn.com/fe-static/docs/img/4e3897a7-6d32-40e2-b2bd-6d2a6497076e.png)
 
-> **Important**: The paths must be correct, otherwise the voice wake-up feature will not work. We recommend using absolute paths (full paths starting with `/`).
+> **Important**: The paths must be correct, or voice wake-up will not work.
 
-## Additional Information
+## Additional Notes
 
-### File Transfer for Cross-compilation
+### Transferring Files When Using Cross-compilation
 
-If you're using cross-compilation on your PC, you'll need to transfer the compiled executable to the development board. You can use the `scp` command:
+If you cross-compile on a PC, you need to copy the built executable to the board. You can use `scp`:
 
 ```bash
-scp ./dist/your_chat_bot_1.0.1/your_chat_bot_QIO_1.0.1.bin username@192.168.1.xxx:/home/pi/Desktop/
+scp ./dist/your_chat_bot_1.0.1/your_chat_bot_QIO_1.0.1.bin username@192.168.1.xxx:/home/xx/Desktop/
 ```
 
 **Command parameters:**
-- `username` - Username on the development board
-- `192.168.1.xxx` - IP address of the development board
-- `/home/xxx/Desktop/` - Target directory on the development board
 
-## Frequently Asked Questions
+- `username` — Username on the board
+- `192.168.1.xxx` — IP address of the board
+- `/home/xx/Desktop/` — Target directory on the board
 
-**Q: No sound after configuring the audio device. What should I do?**  
-A: Use the `aplay -l` command to view available audio devices and confirm the device number is correct.
+## FAQ
 
 **Q: Voice wake-up is not working. What should I do?**  
-A: Check that the model file paths are correct and the files are complete. Use the `ls -lh` command to verify the files exist and their sizes are normal.
-
-**Q: How can I check the IP address of the development board?**  
-A: Run `ip addr` or `ifconfig` on the development board to view its IP address.
+A: Check that the model file paths are correct and the files are complete. You can use `ls -lh` to verify that the files exist and their sizes are correct.

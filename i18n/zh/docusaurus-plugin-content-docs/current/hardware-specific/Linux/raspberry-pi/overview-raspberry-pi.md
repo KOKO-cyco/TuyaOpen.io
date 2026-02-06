@@ -25,8 +25,18 @@ Raspberry Pi 支持交叉编译和本地编译两种方式，编译的时候会�
 
 KWS 唤醒模型有两种获取方式：
 
-1. **自动下载**：选择树莓派平台并编译成功后，模型会自动下载到 `platform/LINUX/tuyaos_adapter/src/tkl_audio/models` 目录。
-2. **手动下载**：从 [TuyaOpen-ubuntu 仓库](https://github.com/tuya/TuyaOpen-ubuntu/tree/platform_ubuntu/tuyaos_adapter/src/tkl_audio/models)下载 `tuyaos_adapter/src/tkl_audio/models` 目录中的模型文件。
+**方式一：自动下载**
+
+选择树莓派平台并编译成功后，模型会自动下载到 `platform/LINUX/tuyaos_adapter/src/tkl_audio/models` 目录。
+
+**方式二：手动下载**
+
+使用下面的命令下载 `mdtc_chunk_300ms.mnn` 和 `tokens.txt` 文件到 `~/tuyaopen_models` 目录下：
+
+```bash
+wget -P ~/tuyaopen_models https://github.com/tuya/TuyaOpen-ubuntu/raw/platform_ubuntu/tuyaos_adapter/src/tkl_audio/models/mdtc_chunk_300ms.mnn
+wget -P ~/tuyaopen_models https://github.com/tuya/TuyaOpen-ubuntu/raw/platform_ubuntu/tuyaos_adapter/src/tkl_audio/models/tokens.txt
+```
 
 ### 配置唤醒模型
 
@@ -43,14 +53,29 @@ KWS 唤醒模型有两种获取方式：
 
 ### 配置示例
 
-例如，将模型文件存放在 `/home/pi/Desktop/models/` 目录下时，路径配置如下：
+例如，将模型文件存放在 `~/tuyaopen_models` 目录下时，路径配置如下：
 
-![models_path_config](https://images.tuyacn.com/fe-static/docs/img/eba887ff-d37f-4161-8f08-b641863ab9a6.png)
+![models_path_config](https://images.tuyacn.com/fe-static/docs/img/4e3897a7-6d32-40e2-b2bd-6d2a6497076e.png)
 
-## 其他注意事项
+> **重要提示**：路径必须填写正确，否则语音唤醒功能无法正常工作。
+
+## 补充说明
+
+### 使用交叉编译时的文件传输
 
 如果您使用的是交叉编译方式，可以借助于 scp 命令将编译得到的可执行文件从编译主机传输到树莓派。例如：
 
 ```bash
-scp ./dist/your_chat_bot_1.0.1/your_chat_bot_QIO_1.0.1.bin pi@192.168.1.xxx:/home/pi/Desktop/
+scp ./dist/your_chat_bot_1.0.1/your_chat_bot_QIO_1.0.1.bin username@192.168.1.xxx:/home/xx/Desktop/
 ```
+
+**命令说明：**
+- `username` - 开发板的用户名
+- `192.168.1.xxx` - 开发板的 IP 地址
+- `/home/xx/Desktop/` - 开发板上的目标目录
+
+## 常见问题
+
+**Q: 语音唤醒不工作怎么办？**  
+A: 请检查模型文件路径是否正确，文件是否完整。可以使用 `ls -lh` 命令查看文件是否存在及大小是否正常。
+
