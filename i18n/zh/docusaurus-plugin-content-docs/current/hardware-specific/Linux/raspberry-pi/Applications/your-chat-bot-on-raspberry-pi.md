@@ -1,21 +1,22 @@
 ---
-title: "Raspberry Pi 概述"
+title: "在 Raspberry Pi 上运行 your_chat_bot"
 ---
 
 本文档介绍如何在树莓派上运行 tuyaopen 的 [your_chat_bot](https://tuyaopen.ai/zh/docs/applications/tuya.ai/demo-your-chat-bot) 项目。
 
 Raspberry Pi 支持交叉编译和本地编译两种方式，编译的时候会自行判断当前平台并选择合适的编译方式。
 
-与 T5 平台相比，树莓派需要注意以下两点：
+在树莓派需要注意以下两点：
 
-1. 需要外接 USB 声卡
+1. 需要外接 USB 声卡（声卡需要支持能够输入和输出音频数据的功能）
 2. 需要手动配置模型路径
 
 ## 外置声卡
 
 树莓派默认没有内置麦克风和扬声器，因此需要使用外置 USB 声卡。推荐使用以下型号：
 
-- **USB音频模块 YD1076**，[淘宝链接](https://e.tb.cn/h.77Vo2K5tJIaL86g?tk=lnBAUbwVNB9)
+- **USB 音频模块 YD1076**，[淘宝链接](https://e.tb.cn/h.77Vo2K5tJIaL86g?tk=lnBAUbwVNB9)
+- **waveshare USB 声卡**，[链接](https://www.waveshare.com/wiki/USB_TO_AUDIO?srsltid=AfmBOoqQpLSG-qO8REhn6lDsAIOOjskHyjkyJv0_4BKBo3_vqFqoTisL)
 
 也可以自行选择其他兼容的 USB 声卡。需要注意的是，麦克风应支持输出原始音频数据，不要自带降噪、回声消除等处理功能。
 
@@ -39,6 +40,8 @@ wget -P ~/tuyaopen_models https://github.com/tuya/TuyaOpen-ubuntu/raw/platform_u
 ```
 
 ### 配置唤醒模型
+
+代码中默认配置为`~/tuyaopen_models`，如果你需要修改模型路径，可以按照下面步骤进行配置。
 
 获取模型后，按以下步骤配置路径：
 
@@ -66,13 +69,13 @@ wget -P ~/tuyaopen_models https://github.com/tuya/TuyaOpen-ubuntu/raw/platform_u
 如果您使用的是交叉编译方式，可以借助于 scp 命令将编译得到的可执行文件从编译主机传输到树莓派。例如：
 
 ```bash
-scp ./dist/your_chat_bot_1.0.1/your_chat_bot_QIO_1.0.1.bin username@192.168.1.xxx:/home/xx/Desktop/
+scp ./dist/your_chat_bot_1.0.1/your_chat_bot_QIO_1.0.1.bin username@192.168.1.xxx:~/
 ```
 
 **命令说明：**
 - `username` - 开发板的用户名
 - `192.168.1.xxx` - 开发板的 IP 地址
-- `/home/xx/Desktop/` - 开发板上的目标目录
+- `~/` - 开发板上的目标目录
 
 ## 常见问题
 

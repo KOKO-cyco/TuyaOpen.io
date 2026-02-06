@@ -1,5 +1,5 @@
 ---
-title: "DshanPi-A1 概述"
+title: "在 DshanPi-A1 上运行 your_chat_bot"
 ---
 
 本文档将指导你在 [DshanPi-A1](https://rockchip.100ask.net/en/docs/DshanPi-A1/intro/) 开发板上运行 TuyaOpen 的 [your_chat_bot](https://tuyaopen.ai/zh/docs/applications/tuya.ai/demo-your-chat-bot) 聊天机器人项目。
@@ -16,7 +16,7 @@ DshanPi-A1 支持两种编译方式：
 
 ## 快速上手指南
 
-与 T5 平台相比，在 DshanPi-A1 上运行需要完成以下两个额外配置：
+在 DshanPi-A1 上运行需要完成以下两个额外配置：
 
 1. 配置板载声卡（让开发板能够录音和播放声音）
 2. 配置语音唤醒模型路径
@@ -82,7 +82,9 @@ wget -P ~/tuyaopen_models https://github.com/tuya/TuyaOpen-ubuntu/raw/platform_u
 wget -P ~/tuyaopen_models https://github.com/tuya/TuyaOpen-ubuntu/raw/platform_ubuntu/tuyaos_adapter/src/tkl_audio/models/tokens.txt
 ```
 
-### 2.3 配置模型路径
+代码中默认配置为`~/tuyaopen_models`，如果你需要修改模型路径，可以按照下面步骤进行配置。
+
+### 2.2 配置模型路径
 
 在项目中配置模型文件的路径：
 
@@ -111,7 +113,7 @@ wget -P ~/tuyaopen_models https://github.com/tuya/TuyaOpen-ubuntu/raw/platform_u
    - `KWS model file path` → 填入 `mdtc_chunk_300ms.mnn` 的完整路径
    - `KWS model token file path` → 填入 `tokens.txt` 的完整路径
 
-### 2.4 配置示例
+### 2.3 配置示例
 
 假设你将模型文件放在 `~/tuyaopen_models` 目录下，配置应该如下图所示：
 
@@ -126,13 +128,13 @@ wget -P ~/tuyaopen_models https://github.com/tuya/TuyaOpen-ubuntu/raw/platform_u
 如果你在 PC 上进行交叉编译，需要将编译好的可执行文件传输到开发板。可以使用 `scp` 命令：
 
 ```bash
-scp ./dist/your_chat_bot_1.0.1/your_chat_bot_QIO_1.0.1.bin username@192.168.1.xxx:/home/xx/Desktop/
+scp ./dist/your_chat_bot_1.0.1/your_chat_bot_QIO_1.0.1.bin username@192.168.1.xxx:~/
 ```
 
 **命令说明：**
 - `username` - 开发板的用户名
 - `192.168.1.xxx` - 开发板的 IP 地址
-- `/home/xx/Desktop/` - 开发板上的目标目录
+- `~/` - 开发板上的目标目录
 
 ## 常见问题
 

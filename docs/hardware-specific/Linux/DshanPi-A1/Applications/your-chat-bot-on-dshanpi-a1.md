@@ -1,8 +1,8 @@
 ---
-title: "DshanPi-A1 Overview"
+title: "Running your_chat_bot on DshanPi-A1"
 ---
 
-This document guides you through running the TuyaOpen [your_chat_bot](https://tuyaopen.ai/zh/docs/applications/tuya.ai/demo-your-chat-bot) chatbot project on the [DshanPi-A1](https://rockchip.100ask.net/en/docs/DshanPi-A1/intro/) development board.
+This document guides you through running the TuyaOpen [your_chat_bot](https://tuyaopen.ai/docs/applications/tuya.ai/demo-your-chat-bot) chatbot project on the [DshanPi-A1](https://rockchip.100ask.net/en/docs/DshanPi-A1/intro/) development board.
 
 ## Build Methods
 
@@ -17,7 +17,7 @@ The system automatically detects the current platform and selects the appropriat
 
 ## Quick Start
 
-Compared with the T5 platform, running on DshanPi-A1 requires two additional configuration steps:
+Running your_chat_bot on DshanPi-A1 requires two additional configuration steps:
 
 1. Configure the onboard sound card (so the board can record and play audio)
 2. Configure the voice wake-up model path
@@ -84,7 +84,9 @@ wget -P ~/tuyaopen_models https://github.com/tuya/TuyaOpen-ubuntu/raw/platform_u
 wget -P ~/tuyaopen_models https://github.com/tuya/TuyaOpen-ubuntu/raw/platform_ubuntu/tuyaos_adapter/src/tkl_audio/models/tokens.txt
 ```
 
-### 2.3 Configure Model Paths
+The default path in the code is `~/tuyaopen_models`. If you need to change it, follow the steps below.
+
+### 2.2 Configure Model Paths
 
 Configure the paths to the model files in the project:
 
@@ -128,14 +130,14 @@ If the model files are in `~/tuyaopen_models`, the configuration should look lik
 If you cross-compile on a PC, you need to copy the built executable to the board. You can use `scp`:
 
 ```bash
-scp ./dist/your_chat_bot_1.0.1/your_chat_bot_QIO_1.0.1.bin username@192.168.1.xxx:/home/xx/Desktop/
+scp ./dist/your_chat_bot_1.0.1/your_chat_bot_QIO_1.0.1.bin username@192.168.1.xxx:~/
 ```
 
 **Command parameters:**
 
 - `username` — Username on the board
 - `192.168.1.xxx` — IP address of the board
-- `/home/xx/Desktop/` — Target directory on the board
+- `~/` — Target directory on the board
 
 ## FAQ
 
