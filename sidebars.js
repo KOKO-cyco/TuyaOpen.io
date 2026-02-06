@@ -62,6 +62,25 @@ module.exports = {
             },
           ],
         },
+        {
+          type: 'category',
+          label: 'Linux',
+          collapsed: false,
+          items: [
+            {
+              type: 'category',
+              label: 'DshanPi A1',
+              collapsed: false,
+              items: ['hardware-specific/Linux/DshanPi-A1/Applications/your-chat-bot-on-dshanpi-a1'],
+            },
+            {
+              type: 'category',
+              label: 'Raspberry Pi',
+              collapsed: false,
+              items: ['hardware-specific/Linux/raspberry-pi/Applications/your-chat-bot-on-raspberry-pi'],
+            },
+          ],
+        },
       ],
     },
     // ------------------------------------------------------------------
