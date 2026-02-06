@@ -4,6 +4,13 @@ title: "在 DshanPi-A1 上运行 your_chat_bot"
 
 本文档将指导你在 [DshanPi-A1](https://rockchip.100ask.net/en/docs/DshanPi-A1/intro/) 开发板上运行 TuyaOpen 的 [your_chat_bot](https://tuyaopen.ai/zh/docs/applications/tuya.ai/demo-your-chat-bot) 聊天机器人项目。
 
+## 前置准备
+
+请先阅读 [快速开始](https://tuyaopen.ai/zh/docs/quick-start) 及其子章节，了解以下内容：
+- 如何搭建 [TuyaOpen 开发环境](https://tuyaopen.ai/zh/docs/quick-start/enviroment-setup)
+- 如何获取 [TuyaOpen 专用授权码](https://tuyaopen.ai/zh/docs/quick-start/equipment-authorization)，推荐使用修改头文件的方式进行授权
+- 如何进行[设备配网](https://tuyaopen.ai/zh/docs/quick-start/device-network-configuration)
+
 ## 编译方式说明
 
 DshanPi-A1 支持两种编译方式：
@@ -136,8 +143,21 @@ scp ./dist/your_chat_bot_1.0.1/your_chat_bot_QIO_1.0.1.bin username@192.168.1.xx
 - `192.168.1.xxx` - 开发板的 IP 地址
 - `~/` - 开发板上的目标目录
 
+### 如何执行可执行文件
+
+```bash
+./your_chat_bot_QIO_1.0.1.bin
+```
+
+**命令说明：**
+- `your_chat_bot_QIO_1.0.1.bin` - 可执行文件名
+
+首次运行需要进行扫描配网。如果扫描配网或联网失败可以尝试删除 `tuyadb` 文件夹后重新运行。
+
 ## 常见问题
 
 **Q: 语音唤醒不工作怎么办？**  
 A: 请检查模型文件路径是否正确，文件是否完整。可以使用 `ls -lh` 命令查看文件是否存在及大小是否正常。
 
+**Q: 无法执行可执行文件怎么办？**  
+A: 请检查可执行文件是否有执行权限。可以使用 `chmod +x your_chat_bot_QIO_1.0.1.bin` 命令赋予执行权限。

@@ -4,12 +4,22 @@ title: "Running your_chat_bot on Raspberry Pi"
 
 This document describes how to run the [your_chat_bot](https://tuyaopen.ai/docs/applications/tuya.ai/demo-your-chat-bot) project from tuyaopen on a Raspberry Pi.
 
-Raspberry Pi supports both cross-compilation and native compilation. The build process automatically detects the current platform and selects the appropriate compilation method.
+## Prerequisites
 
-When using a Raspberry Pi, note the following:
+Read the [Quick Start](https://tuyaopen.ai/docs/quick-start) and its sub-sections to understand:
 
-1. An external USB sound card is required (the sound card must support both audio input and output)
-2. The model path must be configured manually
+- How to set up the [TuyaOpen development environment](https://tuyaopen.ai/docs/quick-start/enviroment-setup)
+- How to obtain a [TuyaOpen authorization code](https://tuyaopen.ai/docs/quick-start/equipment-authorization); using the header-file method is recommended
+- How to perform [device network configuration](https://tuyaopen.ai/docs/quick-start/device-network-configuration)
+
+## Build Methods
+
+On tuyaopen, Raspberry Pi supports two build methods:
+
+- **Cross-compilation**: Build on a PC, then transfer and run on the Raspberry Pi
+- **Native build**: Build directly on the Raspberry Pi
+
+> **Note**: Cross-compilation is not supported on macOS. Use Linux or build directly on the board.
 
 ## External Sound Card
 
@@ -77,7 +87,21 @@ scp ./dist/your_chat_bot_1.0.1/your_chat_bot_QIO_1.0.1.bin username@192.168.1.xx
 - `192.168.1.xxx` — IP address of the board
 - `~/` — Target directory on the board
 
+### Running the Executable
+
+```bash
+./your_chat_bot_QIO_1.0.1.bin
+```
+
+**Command parameters:**
+- `your_chat_bot_QIO_1.0.1.bin` — Executable file name
+
+On the first run, you need to perform device network configuration (pairing). If pairing or network connection fails, try deleting the `tuyadb` folder and running the program again.
+
 ## FAQ
 
 **Q: Voice wake word is not working. What should I do?**  
 A: Check that the model file paths are correct and that the files are complete. You can use `ls -lh` to verify that the files exist and that their sizes are as expected.
+
+**Q: The executable cannot be run. What should I do?**  
+A: Check that the executable has execute permission. You can run `chmod +x your_chat_bot_QIO_1.0.1.bin` to grant execute permission.
