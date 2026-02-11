@@ -106,5 +106,5 @@ configure tuyaopen  --->
 在 Raspberry Pi 上运行应用/示例时，Wi‑Fi/蓝牙/外设相关操作往往需要访问 `/dev/*` 或系统服务接口，建议使用 `sudo` 运行生成的可执行文件，例如：
 
 ```bash
-sudo ./your_chat_bot_*.bin
+sudo ./your_chat_bot_*.elf
 ```

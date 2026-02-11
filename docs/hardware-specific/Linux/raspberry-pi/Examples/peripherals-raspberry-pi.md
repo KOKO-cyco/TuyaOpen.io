@@ -20,9 +20,9 @@ This document explains how to run TuyaOpen peripheral examples (`examples/periph
 
 1. Make sure you have completed the basic TuyaOpen environment setup, and enter the TuyaOpen repository root directory.
 2. Open the configuration menu:
-	 - Run `tos.py config menu`
-	 - Select the board: `Choice a board → LINUX → Choice a board → RaspberryPi`
-	 - Select the model: `Raspberry Pi Board Configuration → Choose Raspberry Pi model → Raspberry Pi 5` (choose the actual model)
+  - Run `tos.py config menu`
+  - Select the board: `Choice a board → LINUX → Choice a board → RaspberryPi`
+  - Select the model: `Raspberry Pi Board Configuration → Choose Raspberry Pi model → Raspberry Pi 5` (choose the actual model)
 3. Enable peripheral switches as needed: go to `Choice a board → LINUX → TKL Board Configuration`, and enable `ENABLE_GPIO` / `ENABLE_I2C` / `ENABLE_SPI` / `ENABLE_PWM` / `ENABLE_UART`.
 
 ![models_path_config](https://images.tuyacn.com/fe-static/docs/img/4b6127c5-ab9f-415a-b365-cb136467efed.png)
@@ -46,10 +46,10 @@ This example demonstrates how to operate GPIO on Raspberry Pi using TuyaOpen.
 **Supported (available)**
 
 - Basic read/write
-	- `tkl_gpio_init()` / `tkl_gpio_deinit()`: request/release a line handle via Linux gpio-cdev (`/dev/gpiochip*`).
-	- `tkl_gpio_write()` / `tkl_gpio_read()`: write/read the level via `GPIOHANDLE_*` ioctls.
+  - `tkl_gpio_init()` / `tkl_gpio_deinit()`: request/release a line handle via Linux gpio-cdev (`/dev/gpiochip*`).
+  - `tkl_gpio_write()` / `tkl_gpio_read()`: write/read the level via `GPIOHANDLE_*` ioctls.
 - Interrupt callback (event notification)
-	- `tkl_gpio_irq_init()` / `tkl_gpio_irq_enable()` / `tkl_gpio_irq_disable()`: request an event fd via `GPIO_GET_LINEEVENT_IOCTL`, then a thread uses `poll()` to wait for events and invoke the callback.
+  - `tkl_gpio_irq_init()` / `tkl_gpio_irq_enable()` / `tkl_gpio_irq_disable()`: request an event fd via `GPIO_GET_LINEEVENT_IOCTL`, then a thread uses `poll()` to wait for events and invoke the callback.
 
 **Notes / limitations**
 
@@ -109,19 +109,19 @@ This section demonstrates how to operate I2C on Raspberry Pi using TuyaOpen.
 **Supported (available)**
 
 - Basic master send/receive
-	- `tkl_i2c_master_send()`: write to the target device address (backend uses `/dev/i2c-X` + `I2C_SLAVE` + `write()`).
-	- `tkl_i2c_master_receive()`: read from the target device address (backend uses `I2C_SLAVE` + `read()`).
+  - `tkl_i2c_master_send()`: write to the target device address (backend uses `/dev/i2c-X` + `I2C_SLAVE` + `write()`).
+  - `tkl_i2c_master_receive()`: read from the target device address (backend uses `I2C_SLAVE` + `read()`).
 - Common register read combined transaction (Repeated Start)
-	- When `tkl_i2c_master_send(..., xfer_pending=true)` is immediately followed by `tkl_i2c_master_receive()`, the backend merges them into a single `I2C_RDWR` transaction to achieve “write register address/command, then repeated-start read data”.
+  - When `tkl_i2c_master_send(..., xfer_pending=true)` is immediately followed by `tkl_i2c_master_receive()`, the backend merges them into a single `I2C_RDWR` transaction to achieve “write register address/command, then repeated-start read data”.
 - Address probing (scan)
-	- When `tkl_i2c_master_send()` is called with `size==0`, the backend uses SMBus “quick” to probe whether the device ACKs (useful for simple address scanning).
+  - When `tkl_i2c_master_send()` is called with `size==0`, the backend uses SMBus “quick” to probe whether the device ACKs (useful for simple address scanning).
 
 **Not supported yet (API kept, current implementation returns `OPRT_NOT_SUPPORTED`)**
 
 - Slave mode: `tkl_i2c_set_slave_addr()`, `tkl_i2c_slave_send()`, `tkl_i2c_slave_receive()`.
 - Interrupt/event callbacks: `tkl_i2c_irq_init()`, `tkl_i2c_irq_enable()`, `tkl_i2c_irq_disable()`.
 - Extended control/status query: `tkl_i2c_ioctl()`, `tkl_i2c_get_status()`.
-	- Note: `tkl_i2c_get_status()` currently clears the output struct and returns `OPRT_NOT_SUPPORTED`. Do not rely on the returned content.
+  - Note: `tkl_i2c_get_status()` currently clears the output struct and returns `OPRT_NOT_SUPPORTED`. Do not rely on the returned content.
 
 </details>
 
@@ -208,17 +208,17 @@ This example demonstrates SPI on Raspberry Pi using TuyaOpen (user-space spidev)
 **Supported (available)**
 
 - Master mode
-	- `tkl_spi_init()`: open `/dev/spidevX.Y` and configure mode/bits/speed/bitorder.
-	- Only `TUYA_SPI_ROLE_MASTER` / `TUYA_SPI_ROLE_MASTER_SIMPLEX` are supported.
+  - `tkl_spi_init()`: open `/dev/spidevX.Y` and configure mode/bits/speed/bitorder.
+  - Only `TUYA_SPI_ROLE_MASTER` / `TUYA_SPI_ROLE_MASTER_SIMPLEX` are supported.
 - Basic send/receive
-	- `tkl_spi_send()`: backend uses `write()`.
-	- `tkl_spi_recv()`: backend uses `read()`.
+  - `tkl_spi_send()`: backend uses `write()`.
+  - `tkl_spi_recv()`: backend uses `read()`.
 - Transfer
-	- `tkl_spi_transfer()`: full-duplex TX/RX via `SPI_IOC_MESSAGE(1)`.
-	- `tkl_spi_transfer_with_length()`: supports “send then receive” via `SPI_IOC_MESSAGE(2)`.
+  - `tkl_spi_transfer()`: full-duplex TX/RX via `SPI_IOC_MESSAGE(1)`.
+  - `tkl_spi_transfer_with_length()`: supports “send then receive” via `SPI_IOC_MESSAGE(2)`.
 - Counters and status (compatibility APIs)
-	- `tkl_spi_get_data_count()`: returns the byte count from the most recent transfer.
-	- `tkl_spi_get_status()`: returns `OPRT_OK`; currently only clears the struct (does not provide real status).
+  - `tkl_spi_get_data_count()`: returns the byte count from the most recent transfer.
+  - `tkl_spi_get_status()`: returns `OPRT_OK`; currently only clears the struct (does not provide real status).
 
 **Not supported yet (API kept, current implementation returns `OPRT_NOT_SUPPORTED`)**
 
@@ -312,19 +312,19 @@ This example demonstrates PWM on Raspberry Pi using TuyaOpen.
 **Supported (available)**
 
 - PWM output (`/sys/class/pwm`)
-	- `tkl_pwm_init()`: export the channel and configure polarity/period/duty.
-	- `tkl_pwm_start()` / `tkl_pwm_stop()`: start/stop via the `enable` node.
-	- `tkl_pwm_duty_set()`: update duty cycle.
-	- `tkl_pwm_frequency_set()`: update frequency.
-	- `tkl_pwm_polarity_set()`: update polarity.
-	- `tkl_pwm_info_set()` / `tkl_pwm_info_get()`: set/get a full parameter set (get returns the config cached in software).
-	- `tkl_pwm_multichannel_start()` / `tkl_pwm_multichannel_stop()`: start/stop multiple channels sequentially.
-	- `tkl_pwm_deinit()`: stop and unexport.
+  - `tkl_pwm_init()`: export the channel and configure polarity/period/duty.
+  - `tkl_pwm_start()` / `tkl_pwm_stop()`: start/stop via the `enable` node.
+  - `tkl_pwm_duty_set()`: update duty cycle.
+  - `tkl_pwm_frequency_set()`: update frequency.
+  - `tkl_pwm_polarity_set()`: update polarity.
+  - `tkl_pwm_info_set()` / `tkl_pwm_info_get()`: set/get a full parameter set (get returns the config cached in software).
+  - `tkl_pwm_multichannel_start()` / `tkl_pwm_multichannel_stop()`: start/stop multiple channels sequentially.
+  - `tkl_pwm_deinit()`: stop and unexport.
 
 **Not supported yet (API kept, current implementation returns `OPRT_NOT_SUPPORTED`)**
 
 - PWM capture: `tkl_pwm_cap_start()` / `tkl_pwm_cap_stop()`.
-	- Note: the current implementation returns `OPRT_NOT_SUPPORTED` directly.
+  - Note: the current implementation returns `OPRT_NOT_SUPPORTED` directly.
 
 </details>
 
@@ -340,33 +340,33 @@ cd examples/peripherals/pwm
 
 1. Confirm the pin is not in use:
 
-	 ```bash
-	 pinctrl get 18
-	 ```
+   ```bash
+   pinctrl get 18
+   ```
 
-	 If it is not multiplexed, you will typically see output like:
+   If it is not multiplexed, you will typically see output like:
 
-	 - `18: no    pd | -- // GPIO18 = none`
+   - `18: no    pd | -- // GPIO18 = none`
 
 2. Enable the PWM overlay:
 
-	 Append the following to the end of `/boot/firmware/config.txt`:
+   Append the following to the end of `/boot/firmware/config.txt`:
 
-	 ```text
-	 dtoverlay=pwm,pin=18,func=2
-	 ```
+   ```text
+   dtoverlay=pwm,pin=18,func=2
+   ```
 
-	 Reboot the Raspberry Pi for it to take effect.
+   Reboot the Raspberry Pi for it to take effect.
 
 3. After reboot, verify the mapping:
 
-	 ```bash
-	 pinctrl get 18
-	 ```
+   ```bash
+   pinctrl get 18
+   ```
 
-	 Expected output (meaning it has switched to a PWM channel):
+   Expected output (meaning it has switched to a PWM channel):
 
-	 - `18: a3    pd | lo // GPIO18 = PWM0_CHAN2`
+   - `18: a3    pd | lo // GPIO18 = PWM0_CHAN2`
 
 #### Configure
 
@@ -378,8 +378,8 @@ tos.py config menu
 
 - `Choice a board → LINUX → TKL Board Configuration`: enable `ENABLE_PWM`
 - In the same configuration tree, set:
-	- `PWM_SYSFS_CHIP = 0` (corresponds to `/sys/class/pwm/pwmchip0`)
-	- `PWM_SYSFS_CHANNEL_BASE = 2` (because GPIO18 maps to `PWM0_CHAN2`)
+  - `PWM_SYSFS_CHIP = 0` (corresponds to `/sys/class/pwm/pwmchip0`)
+  - `PWM_SYSFS_CHANNEL_BASE = 2` (because GPIO18 maps to `PWM0_CHAN2`)
 - `Application config`: select `pwm port = 0` (because it is `PWM0`)
 
 #### Build and run
@@ -409,13 +409,13 @@ If you use a **physical UART** (for example, Raspberry Pi UART pins connected to
 **Supported (available)**
 
 - Basic send/receive
-	- `tkl_uart_init()`: opens the UART device and configures baud rate/data bits/parity/stop bits via termios.
-	- `tkl_uart_write()`: backend uses `write()`.
-	- `tkl_uart_read()`: backend uses `read()`.
-	- `tkl_uart_deinit()`: closes the fd and stops the RX thread.
+  - `tkl_uart_init()`: opens the UART device and configures baud rate/data bits/parity/stop bits via termios.
+  - `tkl_uart_write()`: backend uses `write()`.
+  - `tkl_uart_read()`: backend uses `read()`.
+  - `tkl_uart_deinit()`: closes the fd and stops the RX thread.
 - RX callback notification (approximate “interrupt” semantics)
-	- `tkl_uart_rx_irq_cb_reg()`: registers the RX callback.
-	- On Linux, a thread uses `select()` to monitor fd readability and invokes the callback when data arrives.
+  - `tkl_uart_rx_irq_cb_reg()`: registers the RX callback.
+  - On Linux, a thread uses `select()` to monitor fd readability and invokes the callback when data arrives.
 
 **Not supported yet (API kept, current implementation returns `OPRT_NOT_SUPPORTED`)**
 
@@ -428,9 +428,9 @@ If you use a **physical UART** (for example, Raspberry Pi UART pins connected to
 **Device node mapping (related to the FAKE UART switch)**
 
 - When `TKL_UART_USE_FAKE = n` (FAKE disabled, using real hardware UART), the default mapping is:
-	- `port 0 -> /dev/ttyAMA0`
-	- `port 1 -> /dev/ttyAMA1`
-	- `port 2 -> /dev/ttyAMA2`
+  - `port 0 -> /dev/ttyAMA0`
+  - `port 1 -> /dev/ttyAMA1`
+  - `port 2 -> /dev/ttyAMA2`
 - When `TKL_UART_USE_FAKE = y` (FAKE enabled), it does not access `/dev/ttyAMA*` and uses a “fake UART” implementation instead (see below).
 
 </details>
@@ -442,13 +442,13 @@ To allow UART-related components to run on Linux **without real UART hardware at
 When FAKE is enabled, the behavior of `tkl_uart.c` roughly becomes the following (different from real UART; mainly for bring-up/demo):
 
 - `TUYA_UART_NUM_0` (port 0):
-	- RX: reads from the current process standard input `/dev/stdin` (i.e. keyboard input in the terminal where you run the `*.elf`).
-	- TX: writes to standard output `stdout` (printed directly in the terminal).
-	- Typical usage: “keyboard input → UART RX”, and you can see “UART TX” output on screen, without relying on any `/dev/ttyAMA*`.
+  - RX: reads from the current process standard input `/dev/stdin` (i.e. keyboard input in the terminal where you run the `*.elf`).
+  - TX: writes to standard output `stdout` (printed directly in the terminal).
+  - Typical usage: “keyboard input → UART RX”, and you can see “UART TX” output on screen, without relying on any `/dev/ttyAMA*`.
 - `TUYA_UART_NUM_1` (port 1):
-	- RX: receives data from a UDP socket and feeds it to the upper-layer RX callback byte-by-byte.
-	- TX: sends data to the peer via UDP.
-	- Note: in the current implementation, the bind/send IP and ports are hard-coded (environment-dependent). In most cases you need to modify the porting-layer source and rebuild.
+  - RX: receives data from a UDP socket and feeds it to the upper-layer RX callback byte-by-byte.
+  - TX: sends data to the peer via UDP.
+  - Note: in the current implementation, the bind/send IP and ports are hard-coded (environment-dependent). In most cases you need to modify the porting-layer source and rebuild.
 
 Limitations / notes of FAKE mode:
 
@@ -458,9 +458,9 @@ Limitations / notes of FAKE mode:
 How to choose whether to use FAKE:
 
 - If you want UART examples/CLI to use the Raspberry Pi real UART pins (`/dev/ttyAMA*` or `/dev/ttyS*`), go to:
-	- `Choice a board → LINUX → TKL Board Configuration`
-	- set `Use fake UART (stdin/UDP) instead of hardware ttyAMA*` to `n`
-	- Note: when this option is **unchecked**, it uses the physical UART (accessing real `ttyAMA*` / `ttyS*` device nodes).
+  - `Choice a board → LINUX → TKL Board Configuration`
+  - set `Use fake UART (stdin/UDP) instead of hardware ttyAMA*` to `n`
+  - Note: when this option is **unchecked**, it uses the physical UART (accessing real `ttyAMA*` / `ttyS*` device nodes).
 - If you just want a quick UART logic check and you don’t have a USB-TTL adapter or hardware loopback yet, keep it as `y`.
 
 #### Note: QR-code output channel during `your_chat_bot` provisioning (FAKE UART)
